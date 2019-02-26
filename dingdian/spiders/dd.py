@@ -58,7 +58,6 @@ class DdSpider(scrapy.Spider):
             item['book_type'] = book_type
             url = book_url[i]
             yield item
-            # yield scrapy.Request(url=url, callback=self.chapter_info, meta={'book_name': book_name[i], 'book_sid': i+1})
             yield scrapy.Request(url=url, callback=self.chapter_info, meta={'book_sid': self.b_id, 'book_name': book_names[i]})
         # 下一页
         next_url = response.xpath('//*[@id="pagelink"]//a[@class="next"]/@href').extract_first()
@@ -78,10 +77,6 @@ class DdSpider(scrapy.Spider):
         for url in content_url:
             # 章节顺序
             sort_num += 1
-            # book_name = response.meta[item['book_name']]
-            # book_sid = response.meta['book_sid']
-            # yield scrapy.Request(url=url, callback=self.get_content, meta={'book_name': book_name, 'book_sid': book_sid})
-            # yield scrapy.Request(url=url, callback=self.get_content)
             yield scrapy.Request(url=url, callback=self.get_content, meta={'book_sid': response.meta['book_sid'],
                                                                            'book_name': response.meta['book_name'],
                                                                            'sort_num': sort_num})
@@ -93,17 +88,11 @@ class DdSpider(scrapy.Spider):
         item_c['p_sid'] = response.meta['book_sid']
         item_c['p_name'] = response.meta['book_name']
         item_c['sort_num'] = response.meta['sort_num']
-        # item_c['sort_num'] = response.meta['sort_num']
         chapter_title = response.xpath('//*[@id="a_main"]/div[2]/dl/dd[1]/h1/text()').extract_first()
-
         content = BeautifulSoup(response.text, 'lxml').find('dd', id='contents').get_text()
         item_c['chapter_content'] = content
         item_c['chapter_title'] = chapter_title
-        # chapter_content = chapter_content.replace('&nbsp;', '')
-        # content = ''
-        # for i in chapter_content:
-        #     content += i.replace(r'', '')
-        # item_c['chapter_content'] = chapter_content
+
         yield item_c
 
 
