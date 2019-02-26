@@ -5,17 +5,13 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import pymysql
-import cx_Oracle
 from dingdian.items import DingdianItem, ContentItem
 
 
 class DingdianPipeline(object):
-    # pass
     def process_item(self, item, spider):
-        # Oracle数据库连接
-        # my_ora = cx_Oracle.connect('erms_book1/erms_book1@127.0.0.1/orcl')
-        my_ora = pymysql.connect(host='localhost', port=3306, user='root', password='123456', charset='utf8', db='erms_xs', use_unicode=True)
-        cur = my_ora.cursor()
+        db = pymysql.connect(host='localhost', port=3306, user='root', password='123456', charset='utf8', db='erms_xs', use_unicode=True)
+        cur = db.cursor()
         try:
             # 插入书籍信息到erms_book_info
             if isinstance(item, DingdianItem):
@@ -26,17 +22,15 @@ class DingdianPipeline(object):
             elif isinstance(item, ContentItem):
                 print('章节：' + item['chapter_title'] + '------->>>正在存入数据库')
                 cur.execute('insert into erms_book_chapter(book_sid_id, chapter_title, chapter_content, book_name, sort_num) VALUES (%s, %s, %s, %s, %s )', (item['p_sid'], item['chapter_title'], item['chapter_content'], item['p_name'], item['sort_num']))
-            my_ora.commit()
+            db.commit()
             cur.close()
-            my_ora.close()
+            db.close()
         except Exception as e:
-            my_ora.commit()
+            db.commit()
             cur.close()
-            my_ora.close()
+            db.close()
             print("出现异常：", e)
         finally:
             return item
-        # # 书籍内容
-        # chapter_title = scrapy.Field()
-        # chapter_content = scrapy.Field()
+ 
 
