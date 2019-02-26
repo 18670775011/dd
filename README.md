@@ -1,18 +1,2 @@
-./
-├── dingdian
-│   ├── __init__.py
-│   ├── items.py
-│   ├── middlewares.py
-│   ├── pipelines.py
-│   ├── settings.py
-│   └── spiders
-│       ├── dd.py
-│       ├── __init__.py
-│       └── __pycache__
-│           ├── dd.cpython-36.pyc
-│           └── __init__.cpython-36.pyc
-├── entrypoint.py
-├── README.md
-└── scrapy.cfg
-
-3 directories, 12 files
+## 顶点小说网站
+使用scrapy框架爬取顶点小说数据信息以及章节内容；数据落地在Mogodb；该项目属于个人学习项目，完结于2018年8月左右
