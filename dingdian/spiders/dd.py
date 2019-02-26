@@ -18,8 +18,8 @@ class DdSpider(scrapy.Spider):
         url_list = response.xpath('//div[@class="main m_menu"]/ul//li/a/@href').extract()
         # 遍历各个小说的分类
         for url in url_list:
-            # if 'http' not in url and len(url) > 5:
-            if 'full.html' in url:
+            # if 'http' not in url and len(url) > 5:  # 各个小说分类
+            if 'full.html' in url:  # 我这里只爬取了完本小说分类
                 sub_url = 'https://www.23us.so' + url
                 print(sub_url)
                 yield scrapy.Request(url=sub_url, callback=self.get_book_info)
